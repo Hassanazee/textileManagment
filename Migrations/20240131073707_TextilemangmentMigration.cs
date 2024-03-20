@@ -3,25 +3,29 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace textileManagment.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class TextilemangmentMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateSequence(
+                name: "AppUserConfigurationSequence");
+
             migrationBuilder.CreateTable(
-                name: "AppUserConfiguration",
+                name: "AppUserConfigurations",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<long>(type: "bigint", nullable: false, defaultValueSql: "NEXT VALUE FOR [AppUserConfigurationSequence]"),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppUserConfiguration", x => x.Id);
+                    table.PrimaryKey("PK_AppUserConfigurations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,9 +81,9 @@ namespace textileManagment.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_AppUserConfiguration_AppUserConfigurationId",
+                        name: "FK_AspNetUsers_AppUserConfigurations_AppUserConfigurationId",
                         column: x => x.AppUserConfigurationId,
-                        principalTable: "AppUserConfiguration",
+                        principalTable: "AppUserConfigurations",
                         principalColumn: "Id");
                 });
 
@@ -189,6 +193,23 @@ namespace textileManagment.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { 1L, null, "SuperAdmin", "SUPERADMIN" },
+                    { 2L, null, "OrgAdmin", "ORGADMIN" },
+                    { 3L, null, "OrgStaff", "ORGSTAFF" },
+                    { 4L, null, "Supplier", "SUPPLIER" },
+                    { 5L, null, "User", "USER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "AppUserConfigurationId", "ConcurrencyStamp", "CreatedById", "CreatedDate", "DisabledComments", "Email", "EmailConfirmed", "FirstName", "IsActive", "IsDelete", "LastName", "LockoutEnabled", "LockoutEnd", "ModifiedById", "ModifiedDate", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "Permission", "PhoneNumber", "PhoneNumberConfirmed", "ProfilePic", "Role", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { 1L, 0, null, "e55d85d2-c582-4753-a840-dac9cae99f91", null, new DateTime(2024, 1, 29, 16, 20, 58, 0, DateTimeKind.Local), null, "superadmin@textile.com", true, "Super", true, false, "Admin", false, null, null, null, "SUPERADMIN@TEXTILE.COM", "SUPERADMIN", "AQAAAAEAACcQAAAAEN7PfOcjhhSXy4TS6annDjtXSJ/wwgHnDfp3IHtakYHvUyVmkmKLkVf5+1dtRfW9ww==", null, "03024340220", false, null, "SuperAdmin", "HG43M3DRHH5JS5Y3EIU5Y6OFOUVX4KZO", false, "superadmin" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -261,7 +282,10 @@ namespace textileManagment.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AppUserConfiguration");
+                name: "AppUserConfigurations");
+
+            migrationBuilder.DropSequence(
+                name: "AppUserConfigurationSequence");
         }
     }
 }

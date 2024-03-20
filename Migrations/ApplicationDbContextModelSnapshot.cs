@@ -22,6 +22,8 @@ namespace textileManagment.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.HasSequence("AppUserConfigurationSequence");
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
                     b.Property<int>("Id")
@@ -125,7 +127,7 @@ namespace textileManagment.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("textileManagment.Entities.AppRole", b =>
+            modelBuilder.Entity("textileManagment.Domain.AppRole", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -153,6 +155,38 @@ namespace textileManagment.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Name = "OrgAdmin",
+                            NormalizedName = "ORGADMIN"
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Name = "OrgStaff",
+                            NormalizedName = "ORGSTAFF"
+                        },
+                        new
+                        {
+                            Id = 4L,
+                            Name = "Supplier",
+                            NormalizedName = "SUPPLIER"
+                        },
+                        new
+                        {
+                            Id = 5L,
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("textileManagment.Entities.AppUser", b =>
@@ -264,27 +298,55 @@ namespace textileManagment.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e55d85d2-c582-4753-a840-dac9cae99f91",
+                            CreatedDate = new DateTime(2024, 1, 29, 16, 20, 58, 0, DateTimeKind.Local),
+                            Email = "superadmin@textile.com",
+                            EmailConfirmed = true,
+                            FirstName = "Super",
+                            IsActive = true,
+                            IsDelete = false,
+                            LastName = "Admin",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPERADMIN@TEXTILE.COM",
+                            NormalizedUserName = "SUPERADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEN7PfOcjhhSXy4TS6annDjtXSJ/wwgHnDfp3IHtakYHvUyVmkmKLkVf5+1dtRfW9ww==",
+                            PhoneNumber = "03024340220",
+                            PhoneNumberConfirmed = false,
+                            Role = "SuperAdmin",
+                            SecurityStamp = "HG43M3DRHH5JS5Y3EIU5Y6OFOUVX4KZO",
+                            TwoFactorEnabled = false,
+                            UserName = "superadmin"
+                        });
                 });
 
             modelBuilder.Entity("textileManagment.Entities.AppUserConfiguration", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasDefaultValueSql("NEXT VALUE FOR [AppUserConfigurationSequence]");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseSequence(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUserConfiguration");
+                    b.ToTable("AppUserConfigurations");
+
+                    b.UseTpcMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
-                    b.HasOne("textileManagment.Entities.AppRole", null)
+                    b.HasOne("textileManagment.Domain.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -311,7 +373,7 @@ namespace textileManagment.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
                 {
-                    b.HasOne("textileManagment.Entities.AppRole", null)
+                    b.HasOne("textileManagment.Domain.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)

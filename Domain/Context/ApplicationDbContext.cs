@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -9,7 +8,7 @@ using textileManagment.Entities.Base.IBase;
 
 namespace textileManagment.Domain.Context
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<long>, long>
+    public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, long>
     {
         private IHttpContextAccessor HttpContextAccessor { get; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor) : base(options)
@@ -17,6 +16,8 @@ namespace textileManagment.Domain.Context
             HttpContextAccessor = httpContextAccessor;
         }
         public virtual DbSet<AppUser> AppUsers { get; set; }
+        public virtual DbSet<AppRole> AppRoles { get; set; }
+        public virtual DbSet<AppUserConfiguration> AppUserConfigurations { get; set; }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
@@ -63,10 +64,8 @@ namespace textileManagment.Domain.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<AppUserConfiguration>().UseTpcMappingStrategy();
             modelBuilder.SeedData();
-
         }
     }
 }

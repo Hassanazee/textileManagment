@@ -10,7 +10,6 @@ using textileManagment.Entities;
 using static textileManagment.Domain.Helper.Helper;
 using Microsoft.AspNetCore.Builder;
 using System.Data;
-using Microsoft.AspNetCore.Identity;
 
 namespace textileManagment.Domain.Helper
 {
@@ -22,7 +21,6 @@ namespace textileManagment.Domain.Helper
             public const string OrgAdmin = "OrgAdmin";
             public const string OrgStaff = "OrgStaff";
             public const string Supplier = "Supplier";
-            public const string Customer = "Customer";
             public const string User = "User";
             public static string Multiple(params string[] roles) => string.Join(",", roles);
         }
@@ -51,11 +49,13 @@ namespace textileManagment.Domain.Helper
                 PasswordHash = "AQAAAAEAACcQAAAAEN7PfOcjhhSXy4TS6annDjtXSJ/wwgHnDfp3IHtakYHvUyVmkmKLkVf5+1dtRfW9ww==",
                 SecurityStamp = "HG43M3DRHH5JS5Y3EIU5Y6OFOUVX4KZO"
             });
-            modelBuilder.Entity<IdentityRole>().HasData(
-            new IdentityRole { Name = Roles.SuperAdmin, NormalizedName = Roles.SuperAdmin.ToUpper() },
-            new IdentityRole { Name = Roles.OrgStaff, NormalizedName = Roles.OrgStaff.ToUpper() },
-            new IdentityRole { Name = Roles.Customer, NormalizedName = Roles.Customer.ToUpper() },
-            new IdentityRole { Name = Roles.Supplier, NormalizedName = Roles.Supplier.ToUpper() }
+            modelBuilder.Entity<AppRole>().HasData(
+            new AppRole { Id = 1, Name = Roles.SuperAdmin, NormalizedName = Roles.SuperAdmin.ToUpper()},
+            new AppRole { Id = 2, Name = Roles.OrgAdmin, NormalizedName = Roles.OrgAdmin.ToUpper() },
+            new AppRole { Id = 3, Name = Roles.OrgStaff, NormalizedName = Roles.OrgStaff.ToUpper() },
+            new AppRole { Id = 4, Name = Roles.Supplier, NormalizedName = Roles.Supplier.ToUpper() },
+            new AppRole { Id = 5, Name = Roles.User, NormalizedName = Roles.User.ToUpper() }
+
             );
         }
              public static void LoadDb(this IServiceCollection services, IConfiguration configuration)
